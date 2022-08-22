@@ -1,6 +1,6 @@
 # Narrator
 
-Narrator is a Slack bot for the Puppet Reader Alums Slack.
+Narrator is a Slack bot.
 
 ## Setting up locally
 1. Create a Python virtual environment:
