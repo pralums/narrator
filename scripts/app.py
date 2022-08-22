@@ -1,4 +1,5 @@
 from dis import dis
+from operator import truediv
 import os
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
@@ -33,6 +34,13 @@ def db_update(filter, i):
         filter['karma'] = i
         collection.insert_one(filter)
 
+# Print all karma objects
+def print_db():
+    print("Karma DB entries:\n")
+    for doc in collection.find({}):
+        print(doc)
+    print('\n---')
+
 # Add/remove karma from db entries
 def karmic_repercussion(item, effect):
     if effect == 'plus':
@@ -40,27 +48,46 @@ def karmic_repercussion(item, effect):
     else:
         db_update({"protagonist": item }, -1)
 
-def find_karma(item):
+def find_karma(item, plus_or_minus, say):
     db_entry = collection.find_one({"protagonist": item })
-
-@app.message(re.compile("(?:\S+)+(?:\s|)(?:\+\+|--)"))
-def manage_karma(context, say):
-    #for doc in collection.find({}):
-    #    print(doc)
-    for item in context['matches']:
-        if '++' in item:
-            if '@' in item:
-                item = find_display_name(re.sub('--','',re.sub('\+\+','', item)))
-            item = re.sub('\+\+','',item).strip()
-            karmic_repercussion(item,'plus')
-            find_karma(item)
+    if db_entry['karma']:
+        if plus_or_minus == "plus":
+            print(db_entry)
+            # TODO: use this syntax to pull in random karmic phrases:
+            # stuff_in_string = "{} something something. ({} karma)".format(item, karma)
+            # From https://matthew-brett.github.io/teaching/string_formatting.html
+            say(f"\"{item}\" feels warm and fuzzy! ({db_entry['karma']} karma)")
         else:
-            if '@' in item:
-                item = find_display_name(re.sub('--','',re.sub('\+\+','', item)))
-            item = re.sub('--','',item).strip()    
-            karmic_repercussion(item,'minus')
-            find_karma(item)
-            #say(f'{karma_item} has lost karma')
+            print(db_entry)
+            say(f"Ouch! \"{item}\" just took a dive! ({db_entry['karma']} karma)")
+
+# For more on this regex, see https://tinyurl.com/5yet7n3z
+@app.message(re.compile("(?:\S+)+(?:\s|)(?:\+\+|--)|\(.*?\)(?:\s|)--|\(.*?\)(?:\s|)\+\+"))
+def manage_karma(context, say):
+    print_db()
+    for item in context['matches']:
+        plus_or_minus = 'plus' if ('++' in item) else 'minus'
+        item = re.sub('--|\+\+','',item) 
+        item = re.sub('(?:(?<=\))\s)|(?:\(|\))','',item).strip()
+        if '@' in item:
+            item = find_display_name(item)
+        karmic_repercussion(item,plus_or_minus)
+        find_karma(item, plus_or_minus, say)
+
+@app.command("/karma help")
+def repeat_text(ack, respond, command):
+    ack()
+    respond(f"{command['text']}")
+
+@app.command("/karma delete")
+def repeat_text(ack, respond, command):
+    ack()
+    respond(f"{command['text']}")
+
+@app.command("/karma reset")
+def repeat_text(ack, respond, command):
+    ack()
+    respond(f"{command['text']}")    
 
 
 # Start app
