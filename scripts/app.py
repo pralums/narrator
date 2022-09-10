@@ -124,8 +124,6 @@ def best_karma(say):
 def worst_karma(say):
     sort_karma(1, "Karmic victims:\n", say)
 
-    
-
 #@app.message(re.compile("(?<=!delete\s)(?:(?:[^-\(\s]+))|(?<=!delete\s\()(?:[^\)]+)"))
 #def delete_entry(context, say):
 #    for item in context['matches']:
