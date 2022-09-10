@@ -2,7 +2,7 @@
 
 Narrator is a karma bot we use for our Slack workspace. Narrator is book/reading themed because we're all huge lit nerds.
 
-I built Narrator using the Slack's [Bolt for Python](https://slack.dev/bolt-python/tutorial/getting-started). Narrator stores karma entries in a pyMongo database.
+I built Narrator using Slack's [Bolt for Python](https://slack.dev/bolt-python/tutorial/getting-started). Narrator stores karma entries in a pyMongo database.
 
 ## Narrator functionality
 
