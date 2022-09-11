@@ -12,13 +12,19 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 from pymongo import MongoClient, ReturnDocument
 from pprint import pprint
 
-# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 # Initializes your app with your bot token and socket mode handler
 app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
+mongo_user = os.environ.get("MONGO_USERNAME")
+mongo_password = os.environ.get("MONGO_PASSWORD")
 
 # MongoDB
-client = MongoClient()
+client = MongoClient(
+    username=mongo_user,
+    password=mongo_password
+)
+
 db = client.karma_db
 collection = db.karma_db
 
