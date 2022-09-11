@@ -1,0 +1,5 @@
+docutils==0.19
+lockfile==0.12.2
+pymongo==4.2.0
+slack-bolt==1.14.3
+slack-sdk==3.18.3
