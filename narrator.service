@@ -1,4 +1,4 @@
-[unit]
+[Unit]
 Description=Narrator Service
 
 [Service]
