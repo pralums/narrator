@@ -5,7 +5,7 @@ Description=Narrator Service
 Type=simple
 User=root
 Group=root
-ExecStart=/home/mthrl/.pyenv/shims/python /home/mthrl/repos/narrator/scripts/app.py
+ExecStart=/home/mthrl/.pyenv/shims/python /usr/repos/narrator/scripts/app.py
 Restart=always
 WorkingDirectory=/tmp
 
