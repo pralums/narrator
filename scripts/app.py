@@ -12,7 +12,13 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 from pymongo import MongoClient, ReturnDocument
 from pprint import pprint
 
-logging.basicConfig(filename='src/logs/narrator.log', encoding='utf-8', level=logging.WARNING)
+FORMAT = '%(asctime)s %(message)s'
+logging.basicConfig(
+    filename='src/logs/narrator.log',
+    encoding='utf-8',
+    level=logging.WARNING,
+    format=FORMAT
+)
 
 # Initializes your app with your bot token and socket mode handler
 app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
