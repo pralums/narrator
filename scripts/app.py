@@ -68,9 +68,9 @@ def print_db():
 # Add/remove karma from db entries
 def karmic_repercussion(item, effect):
     if effect == 'plus':
-        db_update({"protagonist": item }, 1)
+        db_update({"protagonist": item.lower() }, 1)
     else:
-        db_update({"protagonist": item }, -1)
+        db_update({"protagonist": item.lower() }, -1)
 
 def find_karma(item, plus_or_minus, say):
     db_entry = collection.find_one({"protagonist": item })
@@ -110,7 +110,7 @@ def manage_karma(context, say):
         item = re.sub('(?:(?<=\))\s)|(?:\(|\))','',item).strip()
         if '@' in item:
             item = find_display_name(item)
-        karmic_repercussion(item.lower(),plus_or_minus)
+        karmic_repercussion(item,plus_or_minus)
         find_karma(item, plus_or_minus, say)
 
 '''
