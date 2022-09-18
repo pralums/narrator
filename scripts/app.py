@@ -12,25 +12,36 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 from pymongo import MongoClient, ReturnDocument
 from pprint import pprint
 
-FORMAT = '%(asctime)s %(message)s'
-logging.basicConfig(
-    filename='src/logs/narrator.log',
-    encoding='utf-8',
-    level=logging.WARNING,
-    format=FORMAT
-)
-
-# Initializes your app with your bot token and socket mode handler
-app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
 mongo_user = os.environ.get("MONGO_USERNAME")
 mongo_password = os.environ.get("MONGO_PASSWORD")
 
-# MongoDB
-client = MongoClient(
-    username=mongo_user,
-    password=mongo_password
-)
+dev_environment=os.environ.get("DEV_ENVIRONMENT")
+FORMAT = '%(asctime)s %(message)s'
 
+if dev_environment:
+    print(f"DEV ENVIRONMENT: {dev_environment}")
+    logging.basicConfig(
+        level=logging.WARNING,
+        format=FORMAT
+    )
+    client = MongoClient()
+    
+    
+else:
+    print(f"DEV ENVIRONMENT: {dev_environment}")
+    logging.basicConfig(
+        level=logging.WARNING,
+        format=FORMAT,
+        filename='src/logs/narrator.log',
+        encoding='utf-8'
+    )
+    client = MongoClient(
+        username=mongo_user,
+        password=mongo_password
+    )
+
+
+app = App(token=os.environ.get("SLACK_BOT_TOKEN"))    
 db = client.karma_db
 collection = db.karma_db
 
@@ -73,16 +84,14 @@ def karmic_repercussion(item, effect):
         db_update({"protagonist": item.lower() }, -1)
 
 def find_karma(item, plus_or_minus, say):
-    db_entry = collection.find_one({"protagonist": item })
+    db_entry = collection.find_one({"protagonist": item.lower() })
     if db_entry['karma']:
         if plus_or_minus == "plus":
-            print(db_entry)
             # TODO: use this syntax to pull in random karmic phrases:
             # stuff_in_string = "{} something something. ({} karma)".format(item, karma)
             # From https://matthew-brett.github.io/teaching/string_formatting.html
             say(f"\"{item}\" feels warm and fuzzy! ({db_entry['karma']} karma)")
         else:
-            print(db_entry)
             say(f"Ouch! \"{item}\" just took a dive! ({db_entry['karma']} karma)")
 
 def sort_karma(value, doc, say):
@@ -134,14 +143,6 @@ def best_karma(say):
 @app.message(re.compile("!worst"))
 def worst_karma(say):
     sort_karma(1, "Karmic victims:\n", say)
-
-#@app.message(re.compile("(?<=!delete\s)(?:(?:[^-\(\s]+))|(?<=!delete\s\()(?:[^\)]+)"))
-#def delete_entry(context, say):
-#    for item in context['matches']:
-##        db_entry = collection.find_one({"protagonist": item })
- #       if db_entry:
- #           collection.delete_one({"protagonist": item})
- #           say(f"Deleted {item}")
 
 @app.message(re.compile('!list'))
 def list_entries():
