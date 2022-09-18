@@ -2,3 +2,4 @@
 .env
 narrator.log
 nohup.out
+admin_scripts/

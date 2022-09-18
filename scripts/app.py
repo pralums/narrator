@@ -104,14 +104,13 @@ To test this regex, see https://tinyurl.com/5yet7n3z
 '''
 @app.message(re.compile("(?:\S+)+(?:\s|)(?:\+\+|--)|\(.*?\)(?:\s|)--|\(.*?\)(?:\s|)\+\+"))
 def manage_karma(context, say):
-    # print_db()
     for item in context['matches']:
         plus_or_minus = 'plus' if ('++' in item) else 'minus'
-        item = re.sub('--|\+\+','',item) 
+        item = re.sub('--|\+\+','',item)
         item = re.sub('(?:(?<=\))\s)|(?:\(|\))','',item).strip()
         if '@' in item:
             item = find_display_name(item)
-        karmic_repercussion(item,plus_or_minus)
+        karmic_repercussion(item.lower(),plus_or_minus)
         find_karma(item, plus_or_minus, say)
 
 '''
