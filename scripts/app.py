@@ -121,7 +121,7 @@ To test this regex, see https://tinyurl.com/mr24j89j.
 @app.message(re.compile("(?<=!karma\s)(?:(?:[^-\(\s]+))|(?<=!karma\s\()(?:[^\)]+)"))
 def check_karma(context, say):
     for item in context['matches']:
-        db_entry = collection.find_one({"protagonist": item })
+        db_entry = collection.find_one({"protagonist": item.lower() })
         if db_entry:
             say(f"{item} has {db_entry['karma']} karma")
         else:
