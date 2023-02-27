@@ -31,4 +31,5 @@ To run the bot:
    python3 path/to/app.py
    ```
 
-There's more information on setting up a Bolt bolt [in the Slack docs](https://slack.dev/bolt-python/tutorial/getting-started).    
+There's more information on setting up a Bolt bolt [in the Slack docs](https://slack.dev/bolt-python/tutorial/getting-started).
+
